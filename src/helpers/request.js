@@ -1,9 +1,9 @@
 import axios from "axios";
-
+import baseURLConfig from "../helpers/config-baseURL";
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded";
-axios.defaults.baseURL = "http://note-server.hunger-valley.com";
-axios.defaults.withCredentials = true;
+axios.defaults.baseURL = baseURLConfig.baseURL;
+axios.defaults.withCredentials = true; //允许跨域携带cookie信息
 
 export default function request(url, type = "GET", data = {}) {
   return new Promise((resolve, reject) => {
