@@ -48,10 +48,7 @@
 
 <script>
 import Auth from "@/apis/auth";
-
-Auth.getInfo().then((data) => {
-  console.log(data);
-});
+import Bus from "@/helpers/bus";
 
 export default {
   name: "Login",
@@ -105,16 +102,15 @@ export default {
       Auth.register({
         username: this.register.username,
         password: this.register.password,
-      }).then((data) => {
-        console.log(data);
-      });
-
-      // request("/auth/register", "POST", {
-      //   username: this.register.username,
-      //   password: this.register.password,
-      // }).then((data) => {
-      //   console.log(data);
-      // });
+      })
+        .then((data) => {
+          Bus.$emit("userInfo", { username: this.register.username });
+          console.log(data);
+        })
+        .catch((err) => {
+          this.register.isError = true;
+          this.register.notice = "用户已存在";
+        });
 
       console.log(
         `start register..., username: ${this.register.username} , password: ${this.register.password}`
@@ -133,22 +129,20 @@ export default {
         this.login.notice = "密码长度为6~16个字符";
         return;
       }
-      this.login.isError = false;
-      this.login.notice = "";
 
       Auth.login({
         username: this.login.username,
         password: this.login.password,
-      }).then((data) => {
-        console.log(data);
-      });
-
-      // request("/auth/login", "POST", {
-      //   username: this.login.username,
-      //   password: this.login.password,
-      // }).then((data) => {
-      //   console.log(data);
-      // });
+      })
+        .then((data) => {
+          Bus.$emit("userInfo", { username: this.login.username });
+          this.$router.push("/NotebookList");
+          // console.log(data);
+        })
+        .catch((err) => {
+          this.login.isError = true;
+          this.login.notice = "用户名或密码错误";
+        });
 
       console.log(
         `start login..., username: ${this.login.username} , password: ${this.login.password}`

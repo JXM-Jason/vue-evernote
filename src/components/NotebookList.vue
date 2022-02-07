@@ -5,7 +5,16 @@
 </template>
 
 <script>
-export default {};
+import Auth from "@/apis/auth";
+export default {
+  created() {
+    Auth.getInfo().then((res) => {
+      if (!res.isLogin) {
+        this.$router.push("/Login");
+      }
+    });
+  },
+};
 </script>
 
 <style  scoped>
