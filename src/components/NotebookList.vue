@@ -45,6 +45,18 @@ export default {
       notebookList: [],
     };
   },
+  created() {
+    Auth.getInfo().then((res) => {
+      if (!res.isLogin) {
+        this.$router.push("/Login");
+      }
+    });
+    notebooks.getAll().then((res) => {
+      console.log("我是res");
+      console.log(res);
+      this.notebookList = res.data;
+    });
+  },
 
   methods: {
     onCreate() {
@@ -67,32 +79,44 @@ export default {
     },
     onEdit(notebook) {
       console.log("我是编辑");
-      let content = prompt("请输入内容");
+      let title = "";
+      this.$prompt("请输入新的标题", "修改笔记本", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^[\u4E00-\u9FA5A-Za-z0-9]{1,30}$/,
+        inputValue: notebook.title,
+        inputErrorMessage: "标题不能为空且内容不超过30个字符",
+      })
+        .then(({ value }) => {
+          title = value;
+          return notebooks.updateNotebook(notebook.id, { title });
+        })
+        .then((res) => {
+          notebook.title = title;
+          this.$message({
+            type: "success",
+            message: res.msg,
+          });
+        })
+        .catch((res) => {
+          this.$message({
+            type: "info",
+            message: res.msg,
+          });
+        });
+
+      // let content = prompt("请输入内容");
       // console.log("我是content");
       // console.log(content);
-      if (content !== null || content !== "") {
-        notebooks
-          .updateNotebook(notebook.id, { title: content })
-          .then((res) => {
-            alert(res.msg);
-            notebook.title = content;
-          });
-      } else {
-        return;
-      }
+      // if (content !== null || content !== "") {
+      //   notebooks
+      //     .updateNotebook(notebook.id, { title: content })
+      //     .then((res) => {
+      //       alert(res.msg);
+      //       notebook.title = content;
+      //     });
+      // }
     },
-  },
-  created() {
-    Auth.getInfo().then((res) => {
-      if (!res.isLogin) {
-        this.$router.push("/Login");
-      }
-    });
-    notebooks.getAll().then((res) => {
-      console.log("我是res");
-      console.log(res);
-      this.notebookList = res.data;
-    });
   },
 };
 </script>
