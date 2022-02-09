@@ -8,7 +8,7 @@ import Bus from "@/helpers/bus";
 export default {
   data() {
     return {
-      username: "未登录",
+      username: "",
     };
   },
   created() {
@@ -20,6 +20,8 @@ export default {
       console.log(res);
       if (res.isLogin) {
         this.username = res.data.username;
+      } else {
+        this.username = "未登录";
       }
     });
   },
@@ -28,11 +30,6 @@ export default {
       return this.username.charAt(0);
     },
   },
-  // watch: {
-  //   username: function () {
-  //     return (this.slug = this.username.charAt(0));
-  //   },
-  // },
 };
 </script>
 
