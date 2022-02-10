@@ -27,12 +27,12 @@ export default new Router({
       component: NotebookList
     },
     {
-      path: "/NoteDetail/:noteId",
+      path: "/NoteDetail",
       name: "NoteDetail",
       component: NoteDetail
     },
     {
-      path: "/TrashDetail/:noteId",
+      path: "/TrashDetail",
       name: "TrashDetail",
       component: TrashDetail
     },

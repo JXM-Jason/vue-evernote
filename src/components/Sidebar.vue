@@ -5,11 +5,11 @@
       <router-link to="/NotebookList" title="笔记本"
         ><i class="iconfont icon-notebook"></i
       ></router-link>
-      <router-link to="/NoteDetail/1" title="笔记"
+      <router-link to="/NoteDetail" title="笔记"
         ><i class="iconfont icon-note"></i
       ></router-link>
 
-      <router-link to="/TrashDetail/2" title="回收站"
+      <router-link to="/TrashDetail" title="回收站"
         ><i class="iconfont icon-trash"></i
       ></router-link>
     </div>

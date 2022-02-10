@@ -1,8 +1,8 @@
 <template>
   <div class="detail" id="notebook-list">
     <header>
-      <a href="#" class="btn" @click="onCreate"
-        ><i class="iconfont icon-plus"></i>新建笔记本</a
+      <span href="#" class="btn" @click="onCreate"
+        ><i class="iconfont icon-plus"></i>新建笔记本</span
       >
     </header>
     <main>
@@ -10,7 +10,7 @@
         <h3>笔记本列表（{{ this.notebookList.length }}）</h3>
         <div class="book-list">
           <router-link
-            to="/NoteDetail/2"
+            :to="`/NoteDetail?notebookId=${item.id}`"
             href="#"
             class="notebook"
             v-for="(item, index) in notebookList"
@@ -20,8 +20,8 @@
               <span class="iconfont icon-notebook"></span>
               {{ item.title }}
               <span>{{ item.noteCounts }}</span>
-              <span class="action" @click.stop="onEdit(item)">编辑</span
-              ><span class="action" @click.stop="onDelete(item, index)"
+              <span class="action" @click.prevent="onEdit(item)">编辑</span
+              ><span class="action" @click.prevent="onDelete(item, index)"
                 >删除</span
               >
               <span class="date">{{ item.friendlyCreatedAt }}</span>
@@ -60,32 +60,46 @@ export default {
 
   methods: {
     onCreate() {
-      let titleContent = prompt("请输入标题");
-      if (titleContent !== null || titleContent !== "") {
-        notebooks.addNotebook({ title: titleContent }).then((res) => {
-          res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt);
-          this.notebookList.unshift(res.data);
-        });
-      }
-    },
-    onDelete(notebook, index) {
-      console.log("我是删除");
-      let isconfirm = confirm("你确定要删除吗？");
-      if (isconfirm) {
-        notebooks.deleteNotebook(notebook.id).then((res) => {
-          this.notebookList.splice(index, 1);
-        });
-      }
-    },
-    onEdit(notebook) {
-      console.log("我是编辑");
-      let title = "";
-      this.$prompt("请输入新的标题", "修改笔记本", {
+      this.$prompt("输入新笔记本标题", "创建笔记本", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /^[\u4E00-\u9FA5A-Za-z0-9]{1,30}$/,
+        inputErrorMessage: "标题不能为空或空格，且不超过30个字符",
+      })
+        .then(({ value }) => {
+          return notebooks.addNotebook({ title: value });
+        })
+        .then((res) => {
+          res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt);
+          this.notebookList.unshift(res.data);
+          this.$message.success(res.msg);
+        })
+        .catch(() => {});
+    },
+    onDelete(notebook, index) {
+      this.$confirm("是否删除当前笔记?", "删除笔记", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
         inputValue: notebook.title,
-        inputErrorMessage: "标题不能为空且内容不超过30个字符",
+        type: "warning",
+      })
+        .then(() => {
+          return notebooks.deleteNotebook(notebook.id);
+        })
+        .then((res) => {
+          this.notebookList.splice(index, 1);
+          this.$message.success("删除成功");
+        })
+        .catch(() => {});
+    },
+    onEdit(notebook) {
+      let title = "";
+      this.$prompt("请输入新笔记本的标题", "修改笔记本", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputValue: notebook.title,
+        inputPattern: /^[\u4E00-\u9FA5A-Za-z0-9]{1,30}$/,
+        inputErrorMessage: "标题不能为空或空格，且内容不超过30个字符",
       })
         .then(({ value }) => {
           title = value;
@@ -93,29 +107,14 @@ export default {
         })
         .then((res) => {
           notebook.title = title;
-          this.$message({
-            type: "success",
-            message: res.msg,
-          });
+          this.$message.success(res.msg);
         })
         .catch((res) => {
-          this.$message({
-            type: "info",
-            message: res.msg,
-          });
+          // this.$message({
+          //   type: "info",
+          //   message: "取消输入",
+          // });
         });
-
-      // let content = prompt("请输入内容");
-      // console.log("我是content");
-      // console.log(content);
-      // if (content !== null || content !== "") {
-      //   notebooks
-      //     .updateNotebook(notebook.id, { title: content })
-      //     .then((res) => {
-      //       alert(res.msg);
-      //       notebook.title = content;
-      //     });
-      // }
     },
   },
 };

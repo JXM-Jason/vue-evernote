@@ -1,7 +1,10 @@
 <template>
   <div>
     <div>我是笔记本详情页面</div>
-    {{ this.$route.params.noteId }}
+    <span>我是noteId</span>
+    {{ this.$route.query.noteId }}
+    <span>我是notebookId</span>
+    {{ $route.query.notebookId }}
   </div>
 </template>
 
