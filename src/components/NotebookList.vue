@@ -13,7 +13,7 @@
             :to="`/NoteDetail?notebookId=${item.id}`"
             class="notebook"
             v-for="(item, index) in notebooks"
-            :key="item"
+            :key="item.id"
           >
             <div>
               <span class="iconfont icon-notebook"></span>

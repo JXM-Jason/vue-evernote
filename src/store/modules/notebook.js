@@ -40,19 +40,25 @@ const mutations = {
   },
   deleteNotebook(state, payload) {
     //该过滤无效
-    let indexId;
-    state.notebookList.find((notebook, index) => {
-      if ((notebook.id = payload.notebookId)) {
-        indexId = index;
-      }
-    });
-    state.notebookList.splice(indexId, 1);
-    // console.log("mutation里面的deleteNotebook");
-    // console.log(
-    //   state.notebookList.filter(notebook => {
-    //     notebook.id != payload.notebookId;
-    //   })
-    // );
+    // let indexId;
+    // state.notebookList.find((notebook, index) => {
+    //   if ((notebook.id = payload.notebookId)) {
+    //     indexId = index;
+    //   }
+    // });
+    // state.notebookList.splice(indexId, 1);
+
+    state.notebookList = state.notebookList.filter(
+      notebook => notebook.id != payload.notebookId
+    );
+
+    console.log("mutation里面的deleteNotebook");
+    console.log(
+      state.notebookList.filter(notebook => {
+        notebook.id != payload.notebookId;
+      })
+    );
+    console.log(state.notebookList);
     // console.log("state.notebookList变化了嘛");
     // console.log(state.notebookList);
   },
@@ -72,6 +78,7 @@ const actions = {
   addNotebook({ commit }, payload) {
     return Notebook.addNotebook({ title: payload.title }).then(res => {
       commit("addNotebook", { notebook: res.data });
+      Message.success(res.msg);
     });
   },
   updateNotebook({ commit }, payload) {
