@@ -23,61 +23,26 @@
 import Avatar from "./Avatar";
 import Auth from "@/apis/auth";
 import Bus from "@/helpers/bus";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   components: {
     Avatar,
   },
   data() {
-    return {
-      username: "未登录",
-    };
+    return {};
   },
   methods: {
+    ...mapActions([" register", "logout", "getInfo"]),
     Logout() {
-      Auth.logout().then((data) => {
-        Bus.$emit("userInfo", { username: this.username });
+      this.logout().then(() => {
         this.$router.push("/Login");
-        console.log(data);
       });
-
-      console.log("我是注销");
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
-// #sidebar {
-//   position: relative;
-//   width: 56px;
-//   text-align: center;
-//   background-color: #2c333c;
-// }
-
-// .icons {
-//   margin-top: 15px;
-// }
-
-// .icons a {
-//   padding: 6px 0;
-//   display: block;
-// }
-
-// .icons .router-link-active {
-//   background-color: #5e6266;
-// }
-
-// .logout {
-//   position: absolute;
-//   bottom: 20px;
-//   width: 100%;
-//   text-align: center;
-//   cursor: pointer;
-// }
-
-// .iconfont {
-//   color: #fff;
-// }
 #sidebar {
   position: relative;
   width: 56px;

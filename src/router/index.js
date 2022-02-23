@@ -6,6 +6,12 @@ import NoteDetail from "@/components/NoteDetail";
 import TrashDetail from "@/components/TrashDetail";
 import NotFound from "@/components/NotFound";
 import hello from "@/components/Hello";
+//处理重复路由定向的问题
+const originalPush = Router.prototype.push;
+
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err);
+};
 
 Vue.use(Router);
 

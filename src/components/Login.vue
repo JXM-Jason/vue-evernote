@@ -49,6 +49,7 @@
 <script>
 import Auth from "@/apis/auth";
 import Bus from "@/helpers/bus";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "Login",
@@ -71,7 +72,9 @@ export default {
       },
     };
   },
+
   methods: {
+    ...mapActions([" Register", "Login", "logout", "getInfo"]),
     showRegister() {
       this.isShowRegister = true;
       this.isShowLogin = false;
@@ -99,17 +102,14 @@ export default {
       this.register.isError = false;
       this.register.notice = "";
 
-      Auth.register({
-        username: this.register.username,
-        password: this.register.password,
-      })
-        .then((data) => {
-          Bus.$emit("userInfo", { username: this.register.username });
-          console.log(data);
+      this.$store
+        .dispatch("Register", {
+          username: this.register.username,
+          password: this.register.password,
         })
-        .catch((err) => {
-          this.register.isError = true;
-          this.register.notice = "用户已存在";
+        .then((res) => {
+          console.log("resjjj");
+          console.log(res);
         });
 
       console.log(
@@ -130,14 +130,12 @@ export default {
         return;
       }
 
-      Auth.login({
+      this.Login({
         username: this.login.username,
         password: this.login.password,
       })
-        .then((data) => {
-          Bus.$emit("userInfo", { username: this.login.username });
+        .then((res) => {
           this.$router.push("/NotebookList");
-          // console.log(data);
         })
         .catch((err) => {
           this.login.isError = true;
