@@ -18,7 +18,7 @@ export default new Router({
       component: () => import("../components/Login.vue")
     },
     {
-      path: "/NotebookList",
+      path: "/",
       alias: "/NotebookList",
       name: "NotebookList",
       component: () => import("../components/NotebookList.vue")
