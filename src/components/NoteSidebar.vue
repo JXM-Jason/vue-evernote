@@ -1,7 +1,12 @@
 <template>
   <div class="note-sidebar">
     <span class="btn add-note" @click="add(curBook.id)">添加笔记</span>
+    <span v-if="curBook.id" class="btn add-note" @click="onAddNote"
+      >添加笔记</span
+    >
+    <span v-if="!curBook.id" class="notebook-title">无笔记本</span>
     <el-dropdown
+      v-if="curBook.id"
       class="notebook-title"
       @command="handleCommand"
       placement="bottom"
@@ -58,7 +63,10 @@ export default {
         curBookId: this.$route.query.notebookId,
       });
       //获取当前笔记本的所有笔记
-      this.getNotes({ notebookId: this.curBook.id });
+      if (this.curBook.id) {
+        this.getNotes({ notebookId: this.curBook.id });
+      }
+
       // this.setCurNote({ curNoteId: this.$route.query.noteId });
     });
   },
@@ -82,9 +90,16 @@ export default {
     },
 
     add(notebookId) {
-      this.addNote({ notebookId }, { title: "", content: "" }).then(() => {
-        this.getNotes({ notebookId });
-      });
+      if (this.curBook.id) {
+        this.addNote({ notebookId }, { title: "", content: "" }).then(() => {
+          this.getNotes({ notebookId });
+        });
+      } else {
+        this.$message({
+          message: "请创建笔记本后再添加笔记否则添加无效！",
+          type: "warning",
+        });
+      }
     },
   },
 };
