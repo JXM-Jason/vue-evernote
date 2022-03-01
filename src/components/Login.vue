@@ -135,6 +135,8 @@ export default {
         password: this.login.password,
       })
         .then((res) => {
+          console.log("log-res");
+          console.log(res);
           this.$router.push("/NotebookList");
         })
         .catch((err) => {
