@@ -1,9 +1,9 @@
 <template>
   <div class="note-sidebar">
-    <span class="btn add-note" @click="add(curBook.id)">添加笔记</span>
-    <span v-if="curBook.id" class="btn add-note" @click="onAddNote"
+    <span v-if="curBook.id" class="btn add-note" @click="onAddNote(curBook.id)"
       >添加笔记</span
     >
+
     <span v-if="!curBook.id" class="notebook-title">无笔记本</span>
     <el-dropdown
       v-if="curBook.id"
@@ -89,13 +89,14 @@ export default {
       }
     },
 
-    add(notebookId) {
-      if (this.curBook.id) {
+    onAddNote(notebookId) {
+      if (notebookId) {
         this.addNote({ notebookId }, { title: "", content: "" }).then(() => {
           this.getNotes({ notebookId });
         });
       } else {
         this.$message({
+          showClose: true,
           message: "请创建笔记本后再添加笔记否则添加无效！",
           type: "warning",
         });

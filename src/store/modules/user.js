@@ -1,4 +1,5 @@
 import Auth from "../../apis/auth";
+import { Message } from "element-ui";
 
 const state = {
   user: null
@@ -29,28 +30,30 @@ const actions = {
     return Auth.register({
       username: payload.username,
       password: payload.password
-    }).then(() => {
-      console.log("registerkkkkkk");
+    }).then(res => {
       commit("register", {
         username: payload.username,
         password: payload.password
       });
+      Message.success(res.msg);
     });
   },
   Login({ commit }, payload) {
     return Auth.login({
       username: payload.username,
       password: payload.password
-    }).then(() => {
+    }).then(res => {
       commit("login", {
         username: payload.username,
         password: payload.password
       });
+      Message.success(res.msg);
     });
   },
   logout({ commit }) {
-    return Auth.logout().then(() => {
+    return Auth.logout().then(res => {
       commit("logout");
+      Message.success(res.msg);
     });
   },
   getInfo({ commit }) {
